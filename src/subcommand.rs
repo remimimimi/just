@@ -2,35 +2,35 @@ use crate::common::*;
 
 #[derive(PartialEq, Clone, Debug)]
 pub(crate) enum Subcommand {
-  Choose {
-    overrides: BTreeMap<String, String>,
-    chooser:   Option<String>,
-  },
-  Command {
-    arguments: Vec<OsString>,
-    binary:    OsString,
-    overrides: BTreeMap<String, String>,
-  },
-  Completions {
-    shell: String,
-  },
-  Dump,
-  Edit,
-  Evaluate {
-    overrides: BTreeMap<String, String>,
-    variable:  Option<String>,
-  },
-  Init,
-  List,
-  Run {
-    overrides: BTreeMap<String, String>,
-    arguments: Vec<String>,
-  },
-  Show {
-    name: String,
-  },
-  Summary,
-  Variables,
+    Choose {
+        overrides: BTreeMap<String, String>,
+        chooser: Option<String>,
+    },
+    Command {
+        arguments: Vec<OsString>,
+        binary: OsString,
+        overrides: BTreeMap<String, String>,
+    },
+    Completions {
+        shell: String,
+    },
+    Dump,
+    Edit,
+    Evaluate {
+        overrides: BTreeMap<String, String>,
+        variable: Option<String>,
+    },
+    Init,
+    List,
+    Run {
+        overrides: BTreeMap<String, String>,
+        arguments: Vec<String>,
+    },
+    Show {
+        name: String,
+    },
+    Summary,
+    Variables,
 }
 
 const FISH_RECIPE_COMPLETIONS: &str = r#"function __fish_just_complete_recipes
@@ -47,27 +47,27 @@ complete -c just -a '(__fish_just_complete_recipes)'
 "#;
 
 const ZSH_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[
-  (
-    r#"    _arguments "${_arguments_options[@]}" \"#,
-    r#"    local common=("#,
-  ),
-  (
-    r#"'*--set=[Override <VARIABLE> with <VALUE>]' \"#,
-    r#"'*--set[Override <VARIABLE> with <VALUE>]: :_just_variables' \"#,
-  ),
-  (
-    r#"'-s+[Show information about <RECIPE>]' \
+    (
+        r#"    _arguments "${_arguments_options[@]}" \"#,
+        r#"    local common=("#,
+    ),
+    (
+        r#"'*--set=[Override <VARIABLE> with <VALUE>]' \"#,
+        r#"'*--set[Override <VARIABLE> with <VALUE>]: :_just_variables' \"#,
+    ),
+    (
+        r#"'-s+[Show information about <RECIPE>]' \
 '--show=[Show information about <RECIPE>]' \"#,
-    r#"'-s+[Show information about <RECIPE>]: :_just_commands' \
+        r#"'-s+[Show information about <RECIPE>]: :_just_commands' \
 '--show=[Show information about <RECIPE>]: :_just_commands' \"#,
-  ),
-  (
-    "'::ARGUMENTS -- Overrides and recipe(s) to run, defaulting to the first recipe in the \
+    ),
+    (
+        "'::ARGUMENTS -- Overrides and recipe(s) to run, defaulting to the first recipe in the \
      justfile:_files' \\
 && ret=0
 \x20\x20\x20\x20
 ",
-    r#")
+        r#")
 
     _arguments "${_arguments_options[@]}" $common \
         '1: :_just_commands' \
@@ -112,12 +112,12 @@ const ZSH_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[
 
     return ret
 "#,
-  ),
-  (
-    "    local commands; commands=(
+    ),
+    (
+        "    local commands; commands=(
 \x20\x20\x20\x20\x20\x20\x20\x20
     )",
-    r#"    [[ $PREFIX = -* ]] && return 1
+        r#"    [[ $PREFIX = -* ]] && return 1
     integer ret=1
     local variables; variables=(
         ${(s: :)$(_call_program commands just --variables)}
@@ -126,10 +126,10 @@ const ZSH_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[
         ${${${(M)"${(f)$(_call_program commands just --list)}":#    *}/ ##/}/ ##/:Args: }
     )
 "#,
-  ),
-  (
-    r#"    _describe -t commands 'just commands' commands "$@""#,
-    r#"    if compset -P '*='; then
+    ),
+    (
+        r#"    _describe -t commands 'just commands' commands "$@""#,
+        r#"    if compset -P '*='; then
         case "${${words[-1]%=*}#*=}" in
             *) _message 'value' && ret=0 ;;
         esac
@@ -138,10 +138,10 @@ const ZSH_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[
         _describe -t commands 'just commands' commands "$@"
     fi
 "#,
-  ),
-  (
-    r#"_just "$@""#,
-    r#"(( $+functions[_just_variables] )) ||
+    ),
+    (
+        r#"_just "$@""#,
+        r#"(( $+functions[_just_variables] )) ||
 _just_variables() {
     [[ $PREFIX = -* ]] && return 1
     integer ret=1
@@ -161,13 +161,13 @@ _just_variables() {
 }
 
 _just "$@""#,
-  ),
+    ),
 ];
 
 const POWERSHELL_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[(
-  r#"$completions.Where{ $_.CompletionText -like "$wordToComplete*" } |
+    r#"$completions.Where{ $_.CompletionText -like "$wordToComplete*" } |
         Sort-Object -Property ListItemText"#,
-  r#"function Get-JustFileRecipes([string[]]$CommandElements) {
+    r#"function Get-JustFileRecipes([string[]]$CommandElements) {
         $justFileIndex = $commandElements.IndexOf("--justfile");
 
         if ($justFileIndex -ne -1 && $justFileIndex + 1 -le $commandElements.Length) {
@@ -192,11 +192,11 @@ const POWERSHELL_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[(
 )];
 
 const BASH_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[(
-  r#"            if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
+    r#"            if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
             fi"#,
-  r#"                if [[ ${cur} == -* ]] ; then
+    r#"                if [[ ${cur} == -* ]] ; then
                     COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                     return 0
                 elif [[ ${COMP_CWORD} -eq 1 ]]; then
@@ -209,61 +209,64 @@ const BASH_COMPLETION_REPLACEMENTS: &[(&str, &str)] = &[(
 )];
 
 impl Subcommand {
-  pub(crate) fn completions(verbosity: Verbosity, shell: &str) -> Result<(), i32> {
-    use clap::Shell;
+    pub(crate) fn completions(verbosity: Verbosity, shell: &str) -> Result<(), i32> {
+        use clap::Shell;
 
-    fn replace(
-      verbosity: Verbosity,
-      haystack: &mut String,
-      needle: &str,
-      replacement: &str,
-    ) -> Result<(), i32> {
-      if let Some(index) = haystack.find(needle) {
-        haystack.replace_range(index..index + needle.len(), replacement);
-        Ok(())
-      } else {
-        if verbosity.loud() {
-          eprintln!("Failed to find text:");
-          eprintln!("{}", needle);
-          eprintln!("…in completion script:");
-          eprintln!("{}", haystack);
+        fn replace(
+            verbosity: Verbosity,
+            haystack: &mut String,
+            needle: &str,
+            replacement: &str,
+        ) -> Result<(), i32> {
+            if let Some(index) = haystack.find(needle) {
+                haystack.replace_range(index..index + needle.len(), replacement);
+                Ok(())
+            } else {
+                if verbosity.loud() {
+                    eprintln!("Failed to find text:");
+                    eprintln!("{}", needle);
+                    eprintln!("…in completion script:");
+                    eprintln!("{}", haystack);
+                }
+                Err(EXIT_FAILURE)
+            }
         }
-        Err(EXIT_FAILURE)
-      }
+
+        let shell = shell
+            .parse::<Shell>()
+            .expect("Invalid value for clap::Shell");
+
+        let buffer = Vec::new();
+        let mut cursor = Cursor::new(buffer);
+        Config::app().gen_completions_to(env!("CARGO_PKG_NAME"), shell, &mut cursor);
+        let buffer = cursor.into_inner();
+        let mut script = String::from_utf8(buffer).expect("Clap completion not UTF-8");
+
+        match shell {
+            Shell::Bash => {
+                for (needle, replacement) in BASH_COMPLETION_REPLACEMENTS {
+                    replace(verbosity, &mut script, needle, replacement)?;
+                }
+            }
+            Shell::Fish => {
+                script.insert_str(0, FISH_RECIPE_COMPLETIONS);
+            }
+            Shell::PowerShell => {
+                for (needle, replacement) in POWERSHELL_COMPLETION_REPLACEMENTS {
+                    replace(verbosity, &mut script, needle, replacement)?;
+                }
+            }
+
+            Shell::Zsh => {
+                for (needle, replacement) in ZSH_COMPLETION_REPLACEMENTS {
+                    replace(verbosity, &mut script, needle, replacement)?;
+                }
+            }
+            Shell::Elvish => {}
+        }
+
+        println!("{}", script.trim());
+
+        Ok(())
     }
-
-    let shell = shell
-      .parse::<Shell>()
-      .expect("Invalid value for clap::Shell");
-
-    let buffer = Vec::new();
-    let mut cursor = Cursor::new(buffer);
-    Config::app().gen_completions_to(env!("CARGO_PKG_NAME"), shell, &mut cursor);
-    let buffer = cursor.into_inner();
-    let mut script = String::from_utf8(buffer).expect("Clap completion not UTF-8");
-
-    match shell {
-      Shell::Bash =>
-        for (needle, replacement) in BASH_COMPLETION_REPLACEMENTS {
-          replace(verbosity, &mut script, needle, replacement)?;
-        },
-      Shell::Fish => {
-        script.insert_str(0, FISH_RECIPE_COMPLETIONS);
-      },
-      Shell::PowerShell =>
-        for (needle, replacement) in POWERSHELL_COMPLETION_REPLACEMENTS {
-          replace(verbosity, &mut script, needle, replacement)?;
-        },
-
-      Shell::Zsh =>
-        for (needle, replacement) in ZSH_COMPLETION_REPLACEMENTS {
-          replace(verbosity, &mut script, needle, replacement)?;
-        },
-      Shell::Elvish => {},
-    }
-
-    println!("{}", script.trim());
-
-    Ok(())
-  }
 }

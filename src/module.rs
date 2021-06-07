@@ -9,8 +9,8 @@ use crate::common::*;
 /// which produces a `Justfile` from a `Module`.
 #[derive(Debug)]
 pub(crate) struct Module<'src> {
-  /// Items in the justfile
-  pub(crate) items:    Vec<Item<'src>>,
-  /// Non-fatal warnings encountered during parsing
-  pub(crate) warnings: Vec<Warning>,
+    /// Items in the justfile
+    pub(crate) items: Vec<Item<'src>>,
+    /// Non-fatal warnings encountered during parsing
+    pub(crate) warnings: Vec<Warning>,
 }

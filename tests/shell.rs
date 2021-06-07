@@ -17,28 +17,28 @@ recipe default=`DEFAULT`:
 #[test]
 #[cfg_attr(windows, ignore)]
 fn flag() {
-  let tmp = tmptree! {
-    justfile: JUSTFILE,
-    shell: "#!/usr/bin/env bash\necho \"$@\"",
-  };
+    let tmp = tmptree! {
+      justfile: JUSTFILE,
+      shell: "#!/usr/bin/env bash\necho \"$@\"",
+    };
 
-  let shell = tmp.path().join("shell");
+    let shell = tmp.path().join("shell");
 
-  #[cfg(not(windows))]
-  {
-    let permissions = std::os::unix::fs::PermissionsExt::from_mode(0o700);
-    std::fs::set_permissions(&shell, permissions).unwrap();
-  }
+    #[cfg(not(windows))]
+    {
+        let permissions = std::os::unix::fs::PermissionsExt::from_mode(0o700);
+        std::fs::set_permissions(&shell, permissions).unwrap();
+    }
 
-  let output = Command::new(executable_path("just"))
-    .current_dir(tmp.path())
-    .arg("--shell")
-    .arg(shell)
-    .output()
-    .unwrap();
+    let output = Command::new(executable_path("just"))
+        .current_dir(tmp.path())
+        .arg("--shell")
+        .arg(shell)
+        .output()
+        .unwrap();
 
-  let stdout = "-cu -cu EXPRESSION\n-cu -cu DEFAULT\n-cu RECIPE\n";
-  assert_stdout(&output, stdout);
+    let stdout = "-cu -cu EXPRESSION\n-cu -cu DEFAULT\n-cu RECIPE\n";
+    assert_stdout(&output, stdout);
 }
 
 const JUSTFILE_CMD: &str = r#"
@@ -56,18 +56,18 @@ recipe:
 #[test]
 #[cfg_attr(unix, ignore)]
 fn cmd() {
-  let tmp = tmptree! {
-    justfile: JUSTFILE_CMD,
-  };
+    let tmp = tmptree! {
+      justfile: JUSTFILE_CMD,
+    };
 
-  let output = Command::new(executable_path("just"))
-    .current_dir(tmp.path())
-    .output()
-    .unwrap();
+    let output = Command::new(executable_path("just"))
+        .current_dir(tmp.path())
+        .output()
+        .unwrap();
 
-  let stdout = "\\\"ECHO is on.\\\"\r\n";
+    let stdout = "\\\"ECHO is on.\\\"\r\n";
 
-  assert_stdout(&output, stdout);
+    assert_stdout(&output, stdout);
 }
 
 const JUSTFILE_POWERSHELL: &str = r#"
@@ -85,18 +85,18 @@ recipe:
 #[test]
 #[cfg_attr(unix, ignore)]
 fn powershell() {
-  let tmp = tmptree! {
-    justfile: JUSTFILE_POWERSHELL,
-  };
+    let tmp = tmptree! {
+      justfile: JUSTFILE_POWERSHELL,
+    };
 
-  let output = Command::new(executable_path("just"))
-    .current_dir(tmp.path())
-    .output()
-    .unwrap();
+    let output = Command::new(executable_path("just"))
+        .current_dir(tmp.path())
+        .output()
+        .unwrap();
 
-  let stdout = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\nHello, world!\n";
+    let stdout = "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\nHello, world!\n";
 
-  assert_stdout(&output, stdout);
+    assert_stdout(&output, stdout);
 }
 
 test! {

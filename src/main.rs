@@ -1,5 +1,7 @@
 fn main() {
-  if let Err(code) = just::run() {
+    let code = match just::run() {
+        Err(it) => it,
+        _ => return,
+    };
     std::process::exit(code);
-  }
 }

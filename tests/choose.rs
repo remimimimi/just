@@ -115,30 +115,30 @@ test! {
 
 #[test]
 fn default() {
-  let tmp = tmptree! {
-    justfile: "foo:\n echo foo\n",
-  };
+    let tmp = tmptree! {
+      justfile: "foo:\n echo foo\n",
+    };
 
-  let cat = which("cat").unwrap();
-  let fzf = tmp.path().join(format!("fzf{}", env::consts::EXE_SUFFIX));
+    let cat = which("cat").unwrap();
+    let fzf = tmp.path().join(format!("fzf{}", env::consts::EXE_SUFFIX));
 
-  #[cfg(unix)]
-  std::os::unix::fs::symlink(cat, fzf).unwrap();
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(cat, fzf).unwrap();
 
-  #[cfg(windows)]
-  std::os::windows::fs::symlink_file(cat, fzf).unwrap();
+    #[cfg(windows)]
+    std::os::windows::fs::symlink_file(cat, fzf).unwrap();
 
-  let path = env::join_paths(
-    iter::once(tmp.path().to_owned()).chain(env::split_paths(&env::var_os("PATH").unwrap())),
-  )
-  .unwrap();
-
-  let output = Command::new(executable_path("just"))
-    .arg("--choose")
-    .current_dir(tmp.path())
-    .env("PATH", path)
-    .output()
+    let path = env::join_paths(
+        iter::once(tmp.path().to_owned()).chain(env::split_paths(&env::var_os("PATH").unwrap())),
+    )
     .unwrap();
 
-  assert_stdout(&output, "foo\n");
+    let output = Command::new(executable_path("just"))
+        .arg("--choose")
+        .current_dir(tmp.path())
+        .env("PATH", path)
+        .output()
+        .unwrap();
+
+    assert_stdout(&output, "foo\n");
 }

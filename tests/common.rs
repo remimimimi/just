@@ -1,12 +1,12 @@
 pub(crate) use std::{
-  collections::BTreeMap,
-  env::{self, consts::EXE_SUFFIX},
-  fs,
-  io::Write,
-  iter,
-  path::Path,
-  process::{Command, Stdio},
-  str,
+    collections::BTreeMap,
+    env::{self, consts::EXE_SUFFIX},
+    fs,
+    io::Write,
+    iter,
+    path::Path,
+    process::{Command, Stdio},
+    str,
 };
 
 pub(crate) use executable_path::executable_path;
