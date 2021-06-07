@@ -554,7 +554,7 @@ impl Config {
 
         match &self.subcommand {
             Choose { overrides, chooser } => {
-                self.choose(justfile, &search, overrides, chooser.as_deref())?
+                self.choose(justfile, &search, overrides, chooser.as_deref())?;
             }
             Command { overrides, .. } => self.run(justfile, &search, overrides, &[])?,
             Dump => Self::dump(justfile),

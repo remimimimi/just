@@ -348,7 +348,7 @@ impl<'src> Display for Recipe<'src> {
                 match fragment {
                     Fragment::Text { token } => write!(f, "{}", token.lexeme())?,
                     Fragment::Interpolation { expression, .. } => {
-                        write!(f, "{{{{{}}}}}", expression)?
+                        write!(f, "{{{{{}}}}}", expression)?;
                     }
                 }
             }
